@@ -18,17 +18,12 @@ function determineWinner(user, computer) {
     else if (user==="Paper" && computer==="Scissor") {return result=2}
 }
 
+
 //Play a Round
-function playRound () {
-    //Prompt User Input and display the possible Values
-    let userValue = prompt(`Choose one of the following values:\n${possibleValues}`)
-    
-    //Check whether user input is valid
-    if (possibleValues.indexOf(userValue) < 0) {
-        console.log("That was not a valid input. You lose this round");
-        return -1;
-    }
-    
+function playRound(strPressedBtnId) {
+    //Take into account one of the buttons pressed
+    const userValue = strPressedBtnId;
+      
     //Create random computer value, call computerPlay
     let computerValue = computerPlay();
 
@@ -36,28 +31,46 @@ function playRound () {
     let gameResult = determineWinner(userValue, computerValue);
     
     //Display Result
-    if(gameResult===0) {console.log(`It's a tie! You both chose ${userValue}`); return 0}
-    else if (gameResult===1) {console.log(`You won! You chose ${userValue} and the computer chose ${computerValue}.`); return 1}
-    else if (gameResult===2) {console.log(`You lost! You chose ${userValue} and the computer chose ${computerValue}.`); return -1}
+    if(gameResult===0) {
+        message.textContent = `It's a tie! You both chose ${userValue}.`;
+        }
+    else if (gameResult===1) {
+        userScore = userScore + 1;
+        message.textContent = `You won! You chose ${userValue} and the computer chose ${computerValue}.`;
+        }
+    else if (gameResult===2) {
+        computerScore = computerScore + 1;
+        message.textContent = `You lost! You chose ${userValue} and the computer chose ${computerValue}.`;
+        }
+    
+    if (userScore >= 5) {
+        message.textContent = "You won this epic tournament!";}
+    if (computerScore >= 5) {
+        message.textContent = "You have been defeated by the superior hardware, mere mortal!";}
+    
+    score1.textContent = `Your Score: ${userScore}`;
+    score2.textContent = `AI Score: ${computerScore}`;
+    
+    return;
     
 }
 
-//Play a game
-function game() {
-    let score = 0;
-    console.log("Welcome to a game of five rounds, good luck to you!")
-    for (i=1;i<=5;i++) {
-        roundResult = playRound();
-        score = score + roundResult;
-    }
-    if (score === 0) {console.log("It's  tie after all!")}
-    else if (score > 0) {console.log("You won this epic tournament!")}
-    else if (score < 0) {console.log("You have been defeated by the superior hardware, mere mortal!")}
+const possibleValues = ["Rock", "Paper", "Scissor"];
+const buttons = document.querySelectorAll('button');
+let message = document.querySelector('p.message');
+let score1 = document.querySelector('p.score1');
+let score2 = document.querySelector('p.score2');
+let userScore = 0;
+let computerScore = 0;
+message.textContent = "Welcome to a game of Rock, Paper, Scissors! First one to win five rounds wins. Good luck to you!";
+
+for (let i = 0; i < buttons.length; i++) {
+    const objBtn = buttons[i];
+    console.log(objBtn.id)
+    objBtn.addEventListener("click",(e)=>{
+        console.log(e);
+        playRound(e.target.id);
+    })
 }
-
-//Define the possible Values in this version of the game
-let possibleValues = ["Rock", "Paper", "Scissor"]
-
-game();
 
 
